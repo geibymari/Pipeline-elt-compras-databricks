@@ -179,12 +179,22 @@ pip install -r requirements.txt
 Crea `.env` en la raíz:
 
 ```env
+# Databricks
 DATABRICKS_HOST=https://your-workspace.cloud.databricks.com
-DATABRICKS_TOKEN=dapi1234567890abcdef
+DATABRICKS_TOKEN=dapiXXXXXXXXXXXXXXXX
+
+# Proyecto ELT
 SCHEMA_NAME=linio
-EMAIL_FROM=your-email@company.com
+VOLUME_COMPRAS=linio.compras
+VOLUME_DETALLES=linio.detalles
+
+# Email notifications
+EMAIL_FROM=your-email@example.com
 EMAIL_SMTP=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USER=your-email@example.com
 EMAIL_PASSWORD=your-app-password
+EMAIL_TO=destinatario@example.com
 ```
 
 ### 5️⃣ En Databricks - Importar Notebooks
