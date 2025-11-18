@@ -25,6 +25,7 @@ Pipeline ELT end-to-end para análisis de compras multicanal usando Databricks, 
 Este proyecto implementa un pipeline ELT completo que procesa datos de compras desde múltiples canales (Presencial y Online) mediante una arquitectura de 3 capas en Databricks:
 
 ✅ Extrae datos de CSV (compras presencial) y JSON (compras online)
+
 ✅ Carga en capa Bronze con trazabilidad completa
 
 ✅ Transforma con limpieza, validación y enriquecimiento de datos
@@ -34,3 +35,69 @@ Este proyecto implementa un pipeline ELT completo que procesa datos de compras d
 ✅ Genera tablas analíticas en capa Gold con joins y agregaciones
 
 ✅ Automatiza mediante Jobs con notificaciones por email
+
+#### 🎯 Caso de Uso
+
+Procesamiento de órdenes de compra de una plataforma de e-commerce (estilo Linio) que captura:
+
+* Compras Presencial: Tiendas físicas con datos en CSV
+
+* Compras Online: Plataforma digital con datos en JSON
+
+* Detalles de Compra: Productos, categorías, precios (múltiples CSV)
+
+Resultado: Tabla de hechos analítica (gold_fact_compras) con información consolidada para BI/reportes.
+
+### 🏗️ Arquitectura ELT
+
+┌──────────────────────────────────────────────────────────────────┐
+│                       
+                        FUENTES DE DATOS                          │
+│  ┌─────────────────────┐  ┌──────────────────────────────────┐  │
+│  │  Presencial.csv     │  │  Online.json + Detalles/*.csv    │  │
+│  │  (Tiendas físicas)  │  │  (Plataforma Online)             │  │
+│  └─────────────────────┘  └──────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                     🟫 CAPA BRONZE (Raw)                         │
+│  01_bronze_layer → bronze_compras, bronze_detalles              │
+│  - Ingesta sin transformación (solo strings)                     │
+│  - Renombre de columnas (snake_case)                             │
+│  - Trazabilidad (tipo_compra, fecha_carga)                       │
+│  01_bronze_calidad → log_calidad_datos                           │
+│  - Validaciones: no nulos, duplicados, formato                   │
+│  - Parámetros de control → estado, detalle (JSON)               │
+└──────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                     🟩 CAPA SILVER (Clean)                       │
+│  02_silver_layer → silver_compras, silver_detalles              │
+│  - Conversión de tipos de datos                                  │
+│  - Limpieza de espacios y formato de texto                       │
+│  - Transformaciones complejas:                                   │
+│    • Estado (1→"Creado", 2→"En Curso", etc.)                   │
+│    • Extracción cliente_id + num_documento                      │
+│    • Tipo de documento (DNI, RUC10, RUC20)                      │
+│    • Nombre cliente (concat nombres + apellidos)                │
+│    • Días abierto + grupo de días                               │
+│  02_silver_calidad → log_calidad_datos                           │
+│  - Validaciones: relaciones entre fechas, rangos                │
+└──────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                     🟨 CAPA GOLD (Analytics)                     │
+│  03_gold_layer → gold_fact_compras                               │
+│  - Join silver_compras + silver_detalles (match por factura)    │
+│  - Tabla de hechos con todas las dimensiones                     │
+│  - Listo para BI (Power BI, Tableau, Looker)                    │
+└──────────────────────────────────────────────────────────────────┘
+                                  │
+                                  ▼
+┌──────────────────────────────────────────────────────────────────┐
+│                   📊 VISUALIZACIÓN & BI                          │
+│  Power BI | Tableau | Databricks SQL Analytics                  │
+└──────────────────────────────────────────────────────────────────┘
