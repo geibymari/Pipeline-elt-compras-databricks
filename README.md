@@ -635,23 +635,6 @@ Más en [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
 
 ---
 
-## 🎬 Presentación del Proyecto
-
-### Video Requerido (15 min max)
-
-✅ Mostrar schema `linio` con volumes (sin tablas aún)  
-✅ Describir caso de uso (compras presencial + online)  
-✅ Recorrer notebooks bronze, silver, gold  
-✅ Mostrar workflow en Databricks Jobs  
-✅ Ejecutar pipeline completo  
-✅ Mostrar correo de confirmación  
-✅ Verificar tablas delta creadas y pobladas  
-
-📍 **Publicar en LinkedIn** con descripción llamativa  
-📍 **Compartir link en Classroom**
-
----
-
 ## 🤝 Contribuciones
 
 Las contribuciones son bienvenidas:
@@ -672,11 +655,10 @@ MIT License - Ver [LICENSE](LICENSE)
 
 ## 👤 Contacto & Links
 
-- 💼 **LinkedIn**: [Tu Perfil](https://linkedin.com/in/tu-usuario)
-- 🌐 **Portfolio**: [Tu Web](https://tu-sitio.com)
-- 📧 **Email**: tu.email@example.com
-- 🎬 **TikTok**: [@tu-tiktok](https://tiktok.com/@tu-tiktok)
-- 📹 **Video del Proyecto**: [LinkedIn Post](https://linkedin.com/feed/update/...)
+- 💼 **LinkedIn**: [Tu Perfil](https://www.linkedin.com/in/geiby-maribel-sosa-chamba-300831b7/)
+- 🌐 **Portfolio**: [Tu Web](https://portfolio-data-engineer.lovable.app/)
+- 📧 **Email**: geibymari@gmail.com
+- 📹 **Video del Proyecto**: [LinkedIn Post](https://www.linkedin.com/posts/geiby-maribel-sosa-chamba-300831b7_dataengineering-databricks-elt-activity-7378228733519876096-FNgJ?utm_source=share&utm_medium=member_desktop&rcm=ACoAABjci3ABc4Wz2UXPphN0W0ty6TIVmuuEbsI)
 
 ---
 
