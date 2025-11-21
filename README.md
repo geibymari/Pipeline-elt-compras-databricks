@@ -400,8 +400,6 @@ Databricks Workflow → Todas las tareas arriba + condicionales + email
 
 ## ✅ Validaciones de Calidad
 
-Documentación completa en [docs/QUALITY_RULES.md](docs/QUALITY_RULES.md)
-
 ### Bronze Layer Checks
 ```
 ✓ No nulls en columnas clave (factura, fecha_orden)
@@ -539,62 +537,6 @@ GOLD LAYER:
    - Join completitud: 100% ✓
    - Ready for BI ✅
 ```
-
----
-
-## 🐛 Troubleshooting
-
-### ❌ Error: "Delta table already exists"
-```python
-# Solución: Código ya incluye DROP TABLE IF EXISTS
-# Si persiste, ejecutar manualmente:
-DROP TABLE IF EXISTS linio.bronze_compras;
-DROP TABLE IF EXISTS linio.bronze_detalles;
-```
-
-### ❌ Error: "Volume not found"
-```bash
-# Verificar volumes creados:
-SHOW VOLUMES IN linio;
-
-# Si no existen, crear:
-CREATE VOLUME linio.compras;
-CREATE VOLUME linio.detalles;
-
-# Cargar archivos:
-dbfs cp Presencial.csv /Volumes/linio/compras/
-```
-
-### ❌ Error: "Schema validation failed" (Online.json)
-```python
-# El JSON online puede tener estructura anidada
-# Solución: Investigar schema con:
-df = spark.read.json("/Volumes/linio/compras/Online.json")
-df.printSchema()
-
-# Luego usar StructType + StringType como especifica el PDF
-from pyspark.sql.types import StructType, StringType
-```
-
-### ❌ Error: "Email not sent"
-```bash
-# Verificar credenciales .env
-# Usar app-specific password (Gmail):
-# https://support.google.com/accounts/answer/185833
-
-# Test SMTP:
-python -c "
-import smtplib
-smtp = smtplib.SMTP('smtp.gmail.com', 587)
-smtp.starttls()
-smtp.login('your-email@gmail.com', 'app-password')
-print('✓ SMTP OK')
-"
-```
-
-Más en [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-
----
 
 ## 📚 Recursos Útiles
 
