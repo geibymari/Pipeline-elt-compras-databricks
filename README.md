@@ -238,41 +238,12 @@ elt-compras-databricks/
 │   └── 📂 jobs/
 │       └── workflow_pipeline.json        # Definición del job (orchestration)
 │
-├── 📂 src/                               # Código Python reutilizable
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── data_cleaning.py              # Funciones de limpieza (trim, upper, etc)
-│   │   ├── data_validation.py            # Reglas de validación de calidad
-│   │   ├── transformations.py            # Lógica de transformación (estado, tipos)
-│   │   └── logger.py                     # Logging configurado
-│   │
-│   └── config/
-│       ├── __init__.py
-│       ├── settings.py                   # Configuraciones (SCHEMA, VOLUMES, etc)
-│       ├── paths.py                      # Rutas de volumes
-│       └── quality_rules.py              # Reglas de calidad centralizadas
-│
-├── 📂 data/                              # Datos de ejemplo/test
+├├── 📂 data/                              # Datos de ejemplo/test
 │   ├── raw/
 │   │   ├── presencial_sample.csv
 │   │   ├── online_sample.json
 │   │   └── detalles_sample.csv
-│   ├── expected/                         # Datos esperados para testing
 │   └── README.md                         # Descripción de datos
-│
-├── 📂 tests/                             # Unit & Integration Tests
-│   ├── __init__.py
-│   ├── test_bronze_logic.py
-│   ├── test_silver_transformations.py
-│   ├── test_gold_joins.py
-│   └── test_quality_rules.py
-│
-├── 📂 assets/                            # Imágenes, diagramas, screenshots
-│   ├── arquitectura_elt.png              # Arquitectura visual
-│   ├── pipeline_workflow.png             # Flujo del Job
-│   ├── sample_query_gold.png             # Resultado en tabla gold
-│   ├── email_notification.png            # Template de email
-│   └── README.md
 │
 ├── 📂 docs/                              # Documentación
 │   ├── ARCHITECTURE.md                   # Detalles de arquitectura
