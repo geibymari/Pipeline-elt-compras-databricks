@@ -214,83 +214,41 @@ databricks workspace import_dir ./notebooks /Users/tu-usuario/elt-compras
 ## 📁 Estructura del Proyecto
 
 ```
-elt-compras-databricks/
-│
-├── 📂 notebooks/                          # Notebooks Databricks principales
-│   ├── 00_setup.ipynb                    # Configuración inicial (crear schema, volumes)
-│   │
-│   ├── 📂 bronze/
-│   │   ├── 01_bronze_layer.ipynb         # Ingesta: CSV presencial + JSON online
-│   │   └── 01_bronze_calidad.ipynb       # Validaciones capa bronze
-│   │
-│   ├── 📂 silver/
-│   │   ├── 02_silver_layer.ipynb         # Transformaciones: tipos, limpieza, lógica
-│   │   └── 02_silver_calidad.ipynb       # Validaciones capa silver
-│   │
-│   ├── 📂 gold/
-│   │   └── 03_gold_layer.ipynb           # Join + tabla de hechos analítica
-│   │
-│   ├── 📂 email/
-│   │   ├── send_success.ipynb            # Email: ejecución exitosa
-│   │   ├── send_error.ipynb              # Email: errores
-│   │   └── send_quality_alert.ipynb      # Email: alertas de calidad
-│   │
-│   └── 📂 jobs/
-│       └── workflow_pipeline.json        # Definición del job (orchestration)
-│
-├── 📂 src/                               # Código Python reutilizable
-│   ├── utils/
-│   │   ├── __init__.py
-│   │   ├── data_cleaning.py              # Funciones de limpieza (trim, upper, etc)
-│   │   ├── data_validation.py            # Reglas de validación de calidad
-│   │   ├── transformations.py            # Lógica de transformación (estado, tipos)
-│   │   └── logger.py                     # Logging configurado
-│   │
-│   └── config/
-│       ├── __init__.py
-│       ├── settings.py                   # Configuraciones (SCHEMA, VOLUMES, etc)
-│       ├── paths.py                      # Rutas de volumes
-│       └── quality_rules.py              # Reglas de calidad centralizadas
-│
-├── 📂 data/                              # Datos de ejemplo/test
-│   ├── raw/
-│   │   ├── presencial_sample.csv
-│   │   ├── online_sample.json
-│   │   └── detalles_sample.csv
-│   ├── expected/                         # Datos esperados para testing
-│   └── README.md                         # Descripción de datos
-│
-├── 📂 tests/                             # Unit & Integration Tests
-│   ├── __init__.py
-│   ├── test_bronze_logic.py
-│   ├── test_silver_transformations.py
-│   ├── test_gold_joins.py
-│   └── test_quality_rules.py
-│
-├── 📂 assets/                            # Imágenes, diagramas, screenshots
-│   ├── arquitectura_elt.png              # Arquitectura visual
-│   ├── pipeline_workflow.png             # Flujo del Job
-│   ├── sample_query_gold.png             # Resultado en tabla gold
-│   ├── email_notification.png            # Template de email
-│   └── README.md
-│
-├── 📂 docs/                              # Documentación
-│   ├── ARCHITECTURE.md                   # Detalles de arquitectura
-│   ├── DATA_DICTIONARY.md                # Diccionario de datos por capa
-│   ├── QUALITY_RULES.md                  # Todas las reglas de validación
-│   ├── SPARK_OPTIMIZATION.md             # Tips de optimización
-│   └── TROUBLESHOOTING.md                # Problemas comunes y soluciones
-│
-├── 📂 .github/workflows/                 # GitHub Actions (CI/CD opcional)
-│   └── test.yml                          # Pipeline de testing
-│
-├── 🔧 requirements.txt                   # Dependencias Python
-├── 🔑 .env.example                       # Template de variables de entorno
-├── 📝 README.md                          # Este archivo
-├── 📜 LICENSE                            # MIT License
-├── .gitignore                            # Archivos ignorados
-├── docker-compose.yml                    # Docker (opcional, para local testing)
-└── setup.py                              # Setup del proyecto Python
+pipeline-elt-compras-databricks/
+├── 📁 notebooks/
+│   ├── 📁 bronze_layer/
+│   │   ├── 01_bronze_layer.ipynb          # Ingestión de datos raw
+│   │   └── 01_bronze_calidad.ipynb        # Validación calidad Bronze
+│   ├── 📁 silver_layer/
+│   │   ├── 02_silver_layer.ipynb          # Transformaciones y limpieza
+│   │   └── 02_silver_calidad.ipynb        # Validación calidad Silver
+│   ├── 📁 gold_layer/
+│   │   └── 03_gold_layer.ipynb            # Consolidación analytics
+│   └── 📁 notifications/
+│       ├── enviar_correo_exitoso.ipynb    # Notificación éxito
+│       ├── enviar_correo_error.ipynb      # Notificación error
+│       └── enviar_correo_calidad.ipynb    # Notificación calidad
+├── 📁 data/
+│   ├── 📁 raw/
+│       ├── 📁 compras/
+│       │   ├── Presencial.csv             # Compras presenciales
+│       │   └── Online.json                # Compras online
+│       └── 📁 detalles/
+│           ├── detalle_001.csv
+│           ├── detalle_002.csv
+│           └── ...
+├── 📁 docs/
+│   └── architecture_diagram.png
+│ 
+├── 📁 assets/
+│   └── 📁 screenshots/
+│       ├── databricks_job.png
+│       └── delta_tables.png
+│  
+├── .gitignore
+├── requirements.txt
+├── README.md
+└── LICENSE
 ```
 
 ---
@@ -442,8 +400,6 @@ Databricks Workflow → Todas las tareas arriba + condicionales + email
 
 ## ✅ Validaciones de Calidad
 
-Documentación completa en [docs/QUALITY_RULES.md](docs/QUALITY_RULES.md)
-
 ### Bronze Layer Checks
 ```
 ✓ No nulls en columnas clave (factura, fecha_orden)
@@ -581,62 +537,6 @@ GOLD LAYER:
    - Join completitud: 100% ✓
    - Ready for BI ✅
 ```
-
----
-
-## 🐛 Troubleshooting
-
-### ❌ Error: "Delta table already exists"
-```python
-# Solución: Código ya incluye DROP TABLE IF EXISTS
-# Si persiste, ejecutar manualmente:
-DROP TABLE IF EXISTS linio.bronze_compras;
-DROP TABLE IF EXISTS linio.bronze_detalles;
-```
-
-### ❌ Error: "Volume not found"
-```bash
-# Verificar volumes creados:
-SHOW VOLUMES IN linio;
-
-# Si no existen, crear:
-CREATE VOLUME linio.compras;
-CREATE VOLUME linio.detalles;
-
-# Cargar archivos:
-dbfs cp Presencial.csv /Volumes/linio/compras/
-```
-
-### ❌ Error: "Schema validation failed" (Online.json)
-```python
-# El JSON online puede tener estructura anidada
-# Solución: Investigar schema con:
-df = spark.read.json("/Volumes/linio/compras/Online.json")
-df.printSchema()
-
-# Luego usar StructType + StringType como especifica el PDF
-from pyspark.sql.types import StructType, StringType
-```
-
-### ❌ Error: "Email not sent"
-```bash
-# Verificar credenciales .env
-# Usar app-specific password (Gmail):
-# https://support.google.com/accounts/answer/185833
-
-# Test SMTP:
-python -c "
-import smtplib
-smtp = smtplib.SMTP('smtp.gmail.com', 587)
-smtp.starttls()
-smtp.login('your-email@gmail.com', 'app-password')
-print('✓ SMTP OK')
-"
-```
-
-Más en [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md)
-
----
 
 ## 📚 Recursos Útiles
 
